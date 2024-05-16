@@ -149,8 +149,10 @@ def registrar(request):
         # Filtrar las personas por ingreso_hora del usuario actual
         personas = PersonalEmpresa.objects.filter(ingreso_hora=request.user)
         
-    # Filtrar los hitos según el proyecto asignado al usuario
+    # Filtrar los proyectos asignados al usuario actual
     proyectos_asignados = Proyecto.objects.filter(asignado_a=request.user)
+    
+    # Filtrar los hitos según los proyectos asignados al usuario actual
     hitos = Hito.objects.filter(proyecto__in=proyectos_asignados)
 
     if request.method == 'POST':
@@ -210,7 +212,7 @@ def registrar_especial(request):
 
 #documento del mes para softland
 @login_required
-def exporte_a_excel(request):
+def reporte_softland(request):
     # Obtener la fecha actual
     today = datetime.date.today()
     # Obtener el mes y año actuales
@@ -288,6 +290,8 @@ def exporte_a_excel_completo(request):
             'Hitos': registro.id_hito.numero_hito if registro.id_hito else None,
             'Nombres Hitos': registro.id_hito.nombre_hito if registro.id_hito else None,
             'Fecha': registro.fecha,
+            'Fecha inicio': registro.fecha_inicio,
+            'Fecha termino': registro.fecha_termino,
             'Horas Normales': registro.horas_normales,
             'Horas Extras': registro.horas_extras,
             'Horas Vacaciones': registro.horas_vacaciones,
@@ -343,6 +347,8 @@ def reporte_mensual(request):
             'Nombre completo': f"{registro.persona.nombre} {registro.persona.apellido}",
             'Proyecto': registro.id_hito.proyecto.nombre if registro.id_hito else None,
             'Fechas': registro.fecha,
+            'Fechas inicio': registro.fecha_inicio,
+            'Fechas termino': registro.fecha_termino,
             'Hrs Normales': registro.horas_normales,
             'Hrs Extras': registro.horas_extras,
             'Hrs Vacaciones': registro.horas_vacaciones,
