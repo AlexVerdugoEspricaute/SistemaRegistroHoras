@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Formulario para ingresar horas -->
+<form method="post">
+    {% csrf_token %}
+    <div class="wrapper row3">
+        <h2>Ingreso de Horas Extraordinarias</h2>
+        <main id="tablas"> 
+            <div class="content"> 
+                <div class="scrollable">
+                    <!-- Mostrar mensajes de error -->
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> 
+                        {% for field, error_list in form.errors.items %}
+                            {% for error in error_list %}
+                                {% if 'horas' in field %}
+                                    {{ error }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- Tabla para ingresar los detalles de las horas -->
+                    <table id="ingreso-table">
+                        <thead class="">
+                            <tr>
+                                <th><label for="persona">Persona</label></th>
+                                <th><label for="fecha_inicio">Fecha inicio</label></th>
+                                <th><label for="fecha_termino">Fecha termino</label></th>
+                                <th><label for="horas_vacaciones">Hrs Vacaciones</label></th>
+                                <th><label for="horas_licencia">Hrs Licencia</label></th> 
+                                <th><label for="horas_permiso">Hrs Permiso</label></th> 
+                                <th><label for="observaciones">Observaciones</label></th>
+                            </tr>
+                        </thead>
+                        <tbody id="filas">
+                            <!-- Fila para ingresar datos -->
+                            <tr class="fila">
+                                <td>{{ form.persona }}</td>
+                                <td>{{ form.fecha_inicio }}</td>
+                                <td>{{ form.fecha_termino }}</td>
+                                <td class="horas">{{ form.horas_vacaciones }}</td>
+                                <td class="horas">{{ form.horas_licencia }}</td>
+                                <td class="horas">{{ form.horas_permiso }}</td>
+                                <td>{{ form.observaciones }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Botones para agregar y eliminar filas -->
+                <div class="submit-button">
+                    <button class="eliminar-fila" type="button">-</button>
+                    <button class="btnAgregar" type="button" id="agregar-fila">+</button>
+                    <button class="btn" type="submit">Guardar</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</form>
+
+
+<!-- Script para agregar y eliminar filas de la tabla -->
+<script>
+    document.getElementById("agregar-fila").addEventListener("click", function() {
+        var fila = document.querySelector('.fila');
+        var nuevaFila = fila.cloneNode(true);
+        document.getElementById("filas").appendChild(nuevaFila);
+    });
+    document.querySelector(".eliminar-fila").addEventListener("click", function() {
+        var filas = document.querySelectorAll('.fila');
+        if (filas.length > 1) {
+            filas[filas.length - 1].remove();
+        }
+    });
+</script>
+
+{% endblock %}

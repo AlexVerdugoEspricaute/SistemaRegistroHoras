@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Título de la página -->
+<h1 class="title">Bienvenido a la aplicación para registrar las horas de trabajo.</h1>
+
+<!-- Sección del resumen de horas trabajadas -->
+<div class="dashboard">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">      
+
+                <!-- Tarjeta para el resumen de horas trabajadas -->
+                <div class="card mt-4">
+                    <div class="card-header bold-text">
+                        Resumen de todas las horas trabajas
+                    </div>
+                    <div class="card-body">
+                        <!-- Información sobre las horas trabajadas -->
+                        <p>Horas normales en total: {{ horas_normales_semana_actual  | default_if_none:"" }} hrs.</p>
+                        <p>Horas extras en total: {{ horas_extras_semana_actual | default_if_none:"" }} hrs.</p>
+                        <p>Horas vacaciones en total: {{ horas_vacaciones_semana_actual  | default_if_none:"" }} hrs.</p>
+                        <p>Horas licencias en total: {{ horas_licencia_semana_actual | default_if_none:"" }} hrs.</p>
+                        <p>Horas permisos en total: {{ horas_permiso_semana_actual | default_if_none:"" }} hrs.</p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta para el empleado con más y menos horas trabajadas -->
+                <div class="card mt-4">
+                    <div class="card-header bold-text">
+                        Empleado(a) con más y menos horas trabajadas
+                    </div>
+                    <div class="card-body">
+                        <!-- Información sobre el empleado con menos horas trabajadas -->
+                        <p>Trabajado menos: {% if nombre_menos_trabajo %}{{ nombre_menos_trabajo  }}</p>
+                            {% else %}
+                                <p>No hay registros para esta semana.</p>
+                            {% endif %}
+                        <!-- Información sobre el empleado con más horas trabajadas -->
+                        <p>Trabajado más: {% if nombre_mas_trabajo %}{{ nombre_mas_trabajo }}</p>
+                            {% else %}
+                                <p>No hay registros para esta semana.</p>
+                            {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección de notificaciones y funcionalidades de administrador -->
+            <div class="col-md-4">
+                <!-- Tarjeta para las notificaciones -->
+                <div class="card mt-4">
+                    <div class="card-header bold-text">
+                        Notificaciones
+                    </div>
+                    <div class="card-body">
+                        <!-- Lista de notificaciones importantes -->
+                        <ul>
+                            <li>¡Recuerda ingresar las horas todas las semanas!</li>
+                            <li>¡Recuerda informar tus vacaciones!</li>
+                        </ul>
+                    </div>
+                </div>        
+                <!-- Sección para el administrador -->
+                {% if request.user.usuario_administrador %}
+                    <div class="card mt-4">
+                        <div class="card-header bold-text">
+                            Informes 
+                        </div>
+                        <div class="card-body">
+                            <!-- Lista de informes disponibles para el administrador -->
+                            <ul>
+                                <li><a href="{% url 'exportar_excel' %}" >Documento del mes</a></li>
+                                <li><a href="{% url 'reporte_mensual' %}" >Reporte mensual</a></li>
+                                <li><a href="{% url 'reporte_semanal' %}" >Reporte semanal</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

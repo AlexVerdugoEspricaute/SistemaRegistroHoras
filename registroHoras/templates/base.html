@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <header>
+        <!-- Metadatos y título de la página -->
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Registro horas Akzio</title>
+        {% block title %}Registro horas{% endblock %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+                <!-- Incluye estilos CSS -->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </header> 
+<body style="background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), url('{% static 'images/fondoEscritorio5.jpg' %}');">
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+        <!-- Logo -->
+        <a href="/"><img src="{% static 'images/logoAkzio.png' %}" alt="home"/></a>
+        <!-- Botón de menú colapsable -->    
+        <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Elementos del menú -->
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <!-- Opciones de navegación -->
+                {% if request.user.is_authenticated %}
+                <a class="nav-link" href="{% url 'registrar' %}">Registrar Horas</a>
+                <a class="nav-link" href="{% url 'registrar_especial' %}">Registrar Horas Extraordinas </a>
+                <a class="nav-link" href="{% url 'visualizar' %}">Visualizar</a>
+                <a><h2>{{ fecha_hora_chile }}</h2></a> 
+                {% endif %}
+                <!-- Panel de administración para usuarios administradores -->
+                {% if request.user.usuario_administrador %}
+                <a class="nav-link" href="{% url 'admin:index' %}">Panel de Administración</a>
+                <a class="nav-link" href="{% url 'register' %}">registrate</a>
+            {% endif %}
+
+            </div>
+        </div>
+        <!-- Botones de autenticación -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav" id="navbarButtons">
+                {% if request.user.is_authenticated %}
+                <!-- Mensaje de bienvenida y botón de cierre de sesión -->
+                <h4 class="bienvenido"> Bienvenido {{ request.user.first_name | default:request.user.nombre }} !</h4>
+                <li class="nav-item">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Cerrar</button>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+        <!-- Modal de cookies -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <p>Este sitio web utiliza cookies para garantizar una mejor experiencia de usuario. Al continuar utilizando este sitio, usted acepta nuestro uso de cookies.</p>
+                <!-- Botones de aceptar/rechazar cookies -->
+                <div class="buttons">
+                    <button class="btn" id="accept-cookies">Aceptar cookies</button>
+                    <button class="btn" id="reject-cookies">Rechazar cookies</button>
+                </div>
+            </div>
+        </div>
+
+    {% block content %}
+    {% endblock %}
+</body>
+    <!-- Scripts de Bootstrap y personalizados -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="{% static 'js/navbar.js' %}"></script>
+    <script src="{% static 'js/visualize.js' %}"></script>
+    <script src="{% static 'js/cookies.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+</html>

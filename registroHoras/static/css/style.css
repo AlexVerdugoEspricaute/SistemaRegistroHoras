@@ -1,0 +1,430 @@
+:root {
+    --primary-color: #007bff; /* Color primario */
+    --secondary-color: #6c757d; /* Color secundario */
+    --background-color: #ffffff; /* Color de fondo */
+    --text-color: #333333; /* Color de texto principal */
+    --font-family: 'Roboto', sans-serif; /* Tipo de letra */
+}
+
+/* Estilos generales */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family); /* Usar variable de tipo de letra */
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: center;
+    background-color: var(--background-color); /* Usar variable de color de fondo */
+    color: var(--text-color); /* Usar variable de color de texto */
+}
+
+body { /* Diseño a imagen de fondo */
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    height: 100%; 
+    margin: 0;
+    padding: 0; 
+    width: 100%;
+}
+
+.bienvenido{
+    margin: 0;
+    margin-top:15px;
+}
+
+.login{
+    margin-top: 80px;
+}
+
+.registro{
+    margin-top: 80px;
+}
+
+nav {
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, .2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+}
+
+.navbar {
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    background: rgba(255, 255, 255, 0.5); 
+    border: 1px solid rgba(0, 0, 0, .2); 
+    box-shadow: 0 0 10px rgba(0, 0, 0, .3); 
+    z-index: 1000; 
+}
+
+.navbar-nav .nav-link {
+    margin-right: 10px; 
+}
+
+#navbarButtons .nav-item {
+    margin-left: 10px; 
+    margin-right: 10px;
+}
+
+.navbar img {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#logincontainer{
+    background: transparent;
+    border: 2px solid rgba(0, 0, 0, .2);
+    backdrop-filter:blur(30px);
+    text-shadow: none;
+    width: 45%;
+    border-radius: 30px;
+    padding:10px;
+    margin-top:5px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, .6);
+}
+
+h2{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.title {
+    position: relative; 
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, .2);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+    border-radius: 30px;
+    padding: 30px;
+    margin: 10px;
+    margin-top: 70px;
+}
+
+.title::before {
+    content: ""; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5); 
+    z-index: -1; 
+    border-radius: inherit; 
+}
+
+#tablas {
+    position: relative; 
+    border-radius: 20px;
+    border: 2px solid rgba(0, 0, 0, .4);
+    background: rgba(255, 255, 255, 0.5); 
+    box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+}
+
+#tablas::before {
+    content: ""; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5); 
+    z-index: -1; 
+    border-radius: inherit;
+}
+
+label{
+    border-radius: 20px;
+    width: 300px;
+    text-align: center;
+    display: block; 
+    margin: 10px auto; 
+    width: 100%; 
+    max-width: 300px;
+    color: #080808;
+    align-items: center;
+}
+
+input{
+    padding: 8px; 
+    border: 2px solid #0808088c;
+    border-radius: 20px;
+    box-sizing: border-box;
+    height: auto; 
+    width: 80%; 
+    max-width: 300px; 
+    margin: 5px auto; 
+    text-align: center;
+    background-color: #ffffffd5;
+}
+
+h2 {
+    color: #080808;
+}
+
+img{
+    width:120px;
+    height:60px;
+    margin:5px;
+    padding-left: 5px;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: drop-shadow(12px 7px 12px rgb(158, 158, 158));
+}
+
+img:hover{
+    transform: scale(1.04);
+    filter: drop-shadow(10px 7px 10px rgb(133, 133, 133));
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 20px;
+    overflow: hidden;
+}
+/* Botones */
+.btn {
+    color: black !important;
+    background-color: #a1a1a1a1 !important; /* Fondo oscuro */
+    border-color: rgba(0, 0, 0, 0.425) !important;
+    margin: 10px; 
+    border-radius: 30px;
+    transition: transform 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease; /* Agrega transición al color de fondo */
+    border-width: 2px;
+    box-shadow: -2px -2px 5px rgb(255, 255, 255),
+    2px 2px 5px rgba(0, 0, 0, 0.5); 
+}
+
+.btn:hover{
+    transform: scale(1.01);
+    background-color: #b3b3b39f !important; /* Fondo claro al pasar el mouse */
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.7); /* Fondo claro al pasar el mouse */
+}
+
+
+.eliminar-fila,
+.btnAgregar {
+    width: 30px; /* Ancho fijo del botón */
+    height: 30px; /* Alto fijo del botón */
+    padding: 0; /* Eliminar el relleno interno */
+    border-radius: 50%;
+    background-color: #a1a1a1a1;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: transform 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: -2px -2px 5px rgba(255, 255, 255, 0.5), 2px 2px 5px rgba(0, 0, 0, 0.5);
+    display: flex; /* Alinear contenido verticalmente */
+    justify-content: center; /* Alinear contenido horizontalmente */
+    align-items: center; /* Alinear contenido verticalmente */
+    font-size: 16px; /* Tamaño de la fuente */
+}
+
+.eliminar-fila {
+    margin-right: 5px; /* Espacio entre los botones */
+}
+.eliminar-fila:hover,
+.btnAgregar:hover{
+    transform: scale(1.01);
+    background-color: #7b7c7c9f !important; /* Fondo claro al pasar el mouse */
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid rgb(109, 109, 109);
+    background-color: #e7e7e7;
+}
+
+table {
+    border-radius: 20px;
+    overflow: hidden; 
+}
+
+table th, table td {
+    border: 1px solid #9c9c9c;
+}
+
+.wrapper {
+    margin: 0 auto;
+    width: auto;
+    padding: 0 20px;
+}
+
+.wrapper.row3 {
+    padding-top: 70px;
+    padding-bottom: 40px;
+}
+
+.wrapper.row3 .content {
+    overflow-x: auto;
+}
+
+.wrapper.row3 .scrollable {
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.card{
+    border-radius: 20px;
+}
+
+.custom-select, .horas-input, .fecha-input {
+    padding: 10px;
+    border: 2px solid #adadad;
+    border-radius: 17px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+input{
+    color: black;
+    border-color: rgba(104, 104, 104, 0.411) !important;
+    background-color: rgb(243, 243, 243);
+    transition: transform 0.5s ease, background-color 0.4s ease;
+    text-shadow: none;
+}
+
+input:hover{
+    color: black;
+    transform: scale(1.01);
+    background-color: rgb(255, 255, 255);;
+    text-shadow: none;
+}
+
+.fixed-header thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.fixed-header th {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #ffffff; /* Fondo del encabezado fijo */
+}
+
+.registros-table th {
+    background-color: rgba(0, 0, 0, 0.253); 
+    color: rgb(0, 0, 0);
+    padding: 10px;
+}
+
+.registros-table td {
+    padding: 10px;
+}
+
+#orden-nombres,#orden-proyectos,#orden-fechas:hover{
+    cursor: pointer;
+}
+
+#ingreso-table {
+    width: 100%;
+
+    margin-bottom: 20px;
+}
+
+#ingreso-table th,
+#ingreso-table td {
+    text-align: center;
+    align-items: center;
+}
+
+#ingreso-table th.horas,
+#ingreso-table td.horas{
+    width: 100px !important; 
+    min-width: 110px !important; 
+}
+
+#ingreso-table th.observaciones,
+#ingreso-table td.observaciones{
+    width: 100px !important; 
+    min-width: 300px !important; 
+}
+
+
+#ingreso-table th {
+    background-color: rgba(0, 0, 0, 0.329); 
+}
+
+
+.submit-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; 
+    margin: 10px;
+}
+
+.card-header,.card{
+    background-color: #cecece;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.card-body{
+    background-color: #f7f7f7; 
+    border-radius: 15px;
+}
+
+/* Estilos para el modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscurecido */
+}
+
+.modal-content {
+    background-color: #fff;
+    width: 300px;
+    margin: 100px auto; /* Centrar verticalmente */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content p {
+    margin-bottom: 10px;
+}
+
+.buttons {
+    text-align: center;
+}
+
+.buttons button {
+    margin: 5px 5px;
+}
+
+
+
+@media screen and (max-width: 600px) {
+    table {
+        border-radius: 0; 
+    }
+    
+    table th, table td {
+        padding: 20px;
+    }
+    #logincontainer {
+        width: 90%; 
+    }
+    #ingreso-table .horas {
+        width: 200px !important;
+
+}
+
+}
+
+

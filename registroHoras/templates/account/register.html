@@ -1,0 +1,40 @@
+
+
+{% extends "base.html" %}
+{% block title %}Crea tu cuenta{% endblock %}
+<div class="columns">
+
+{% block content %}
+
+
+<div class=" login columns">
+    <div class="column is-half">
+        <div class="container" id="logincontainer">
+
+<div class="column is-half">
+
+    <h1 class="is-size-3 mt-3">Crea tu cuenta</h1>
+    <p class="is-size-5">Por favor, registrate utilizando el siguiente formulario:</p>
+    <div class="login-form">
+
+    <form method="post">    
+        {% load widget_tweaks %}
+        {{ user_form.username.label_tag }} {% render_field user_form.username class+="input mt-2"%}
+        {{ user_form.first_name.label_tag }} {% render_field user_form.first_name class+="input mt-2"%}
+        {{ user_form.email.label_tag }} {% render_field user_form.email class+="input mt-2"%}
+        {{ user_form.password.label_tag }} {% render_field user_form.password class+="input mt-2"%}
+        {{ user_form.password2.label_tag }} {% render_field user_form.password2 class+="input mt-2"%}
+        {% csrf_token %}
+    <br/>
+        <input type="submit" value="Create my account" class="btn mt-2 is-link">
+    </form>
+    </div>
+</div>
+</div> 
+</div> 
+</div> 
+</div> 
+{% endblock %}
+
+
+

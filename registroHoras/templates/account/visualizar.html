@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Inicio del bloque de contenido -->
+<div class="wrapper row3">
+    <h2>Personas Registradas</h2>
+    <main id="tablas"> 
+        <div class="content"> 
+            <div >
+                <!-- Tabla para mostrar los registros -->
+                <table class="registros-table" id="registros-table">
+                    <thead class="fixed-header">
+                        <tr>
+                            <!-- Encabezados de la tabla -->
+                            <th><a id="orden-nombres">Nombre</a> <span id="arrow-nombres">▼</span></th>
+                            <th><a id="orden-proyectos">Proyecto</a> <span id="arrow-proyectos">▼</span></th>
+                            <th>Nombre Proyecto </th>
+                            <th>Hito </th>
+                            <th>Nombre Hito </th>
+                            <th>Actividad </th>
+                            <th><a id="orden-fechas">Fecha</a> <span id="arrow-fechas">▼</span></th>
+                            <th>Fecha ini.</th>
+                            <th>Fecha Term.</th>
+                            <th>Hr. Norm.</th>
+                            <th>Hr. Extras</th>
+                            <th>Hr. Vaca.</th>
+                            <th>Hr. Licen.</th>
+                            <th>Hr. Permi.</th>
+                            <th>Hr. Total</th>
+                            <th>Obs.</th>
+                            {% if request.user.usuario_administrador %}
+                            <th>Ok </th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registro in registros %}
+                        <!-- Fila de la tabla para cada registro -->
+                        <tr>
+                            <td>{{ registro.persona  }}</td>
+                            <td>{{ registro.id_hito.proyecto.id_redmine  }}</td>
+                            <td>{{ registro.id_hito.proyecto  | default_if_none:" " }}</td>
+                            <td>{{ registro.id_hito.numero_hito  |  default_if_none:" " }}</td>
+                            <td>{{ registro.id_hito.nombre_hito | default_if_none:" " }}</td>
+                            <td>{{ registro.actividad | default_if_none:" " }}</td>
+                            <td>{{ registro.fecha | default_if_none:" " |date:"d/m/y"}}</td>
+                            <td>{{ registro.fecha_inicio | default_if_none:" " |date:"d/m/y" }}</td> 
+                            <td>{{ registro.fecha_termino | default_if_none:" " |date:"d/m/y" }}</td>                        
+                            <td>{{ registro.horas_normales | default_if_none:0 }}</td>
+                            <td>{{ registro.horas_extras | default_if_none:0 }}</td>
+                            <td>{{ registro.horas_vacaciones | default_if_none:0 }}</td>
+                            <td>{{ registro.horas_licencia | default_if_none:0 }}</td>
+                            <td>{{ registro.horas_permiso | default_if_none:0 }}</td>
+                            <!-- Cálculo de horas totales -->
+                            <td>
+                                {% with horas_normales=registro.horas_normales|default_if_none:0 %}
+                                {% with horas_extras=registro.horas_extras|default_if_none:0 %}
+                                {% with horas_vacaciones=registro.horas_vacaciones|default_if_none:0 %}
+                                {% with horas_licencia=registro.horas_licencia|default_if_none:0 %}
+                                {% with horas_permiso=registro.horas_permiso|default_if_none:0 %}
+                                {{ horas_normales|add:horas_extras|add:horas_vacaciones|add:horas_licencia|add:horas_permiso }}
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                            </td>
+                            <!-- Mostrar observaciones si existen -->
+                            <td>{{ registro.observaciones | default_if_none:" " }}</td>
+                            <!-- Checkbox -->
+                            {% if request.user.usuario_administrador %}
+                            <td>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="checkbox" name="seleccionar" {% if registro.seleccionar %}checked{% endif %}>
+                                    <input type="hidden" name="registro_id" value="{{ registro.id }}">
+                                    <button class="btn" type="submit">Ok</button>
+                                </form>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Botón para exportar a Excel (solo visible para usuarios administradores) -->    
+            </div> {% if request.user.usuario_administrador %}
+            <a href="{% url 'exporte_a_excel_completo' %}" class="btn btn-primary">Exportar a Excel</a>
+        </div> {% endif %}
+    </main>
+</div>
+<!-- Fin del bloque de contenido -->
+{% endblock %}

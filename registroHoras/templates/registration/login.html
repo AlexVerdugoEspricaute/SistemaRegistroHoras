@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+
+<!-- Sección para el formulario de inicio de sesión -->
+<div class=" login columns">
+  <div class="column is-half">
+    <div class="container" id="logincontainer">
+      <!-- Logo -->
+      <a href="/"><img src="{% static 'images/logoAkzio.png' %}" alt="home"/></a>  
+      <!-- Título -->
+      <h1 class="is-size-3 mt-3">Iniciar Sesión</h1>
+      <!-- Manejo de errores -->
+      {% if form.errors %}
+        <p class="is-size-5 text-danger">
+          Su nombre de usuario o contraseña no coinciden. Por favor, inténtelo de nuevo.
+        </p>       
+      {% endif %}
+      <!-- Formulario de inicio de sesión -->
+      <div class="login-form">
+        <form action="{% url 'login' %}" method="post">
+          {% csrf_token %}
+          {% load widget_tweaks %}
+          <!-- Iteración sobre los campos del formulario -->
+          {% for field in form %}
+            {{field.label_tag}}
+            {% render_field field %}
+          {% endfor %}
+          <br>
+          <!-- Botón de envío del formulario -->
+          <button type="submit" value="Log-in" class="btn mt-2">Ingresar</button>
+          <!-- Campo oculto para redireccionamiento -->
+          <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+      </div>
+      <!-- Enlaces adicionales -->
+      <p>¿Necesita cambiar su contraseña? <a href="{% url 'password_change' %}">Haga clic aquí</a></p>
+      <p>Si no recuerda su contraseña, puede ponerse en contacto con un <a href="mailto:development@akzio.cl">administrador</a></p> 
+    </div>
+  </div>
+</div>
+{% endblock %}
