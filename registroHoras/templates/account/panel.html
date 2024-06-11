@@ -61,7 +61,6 @@
                     </div>
                 </div>        
                 <!-- Sección para el administrador -->
-                {% if request.user.usuario_administrador %}
                     <div class="card mt-4">
                         <div class="card-header bold-text">
                             Informes 
@@ -69,13 +68,12 @@
                         <div class="card-body">
                             <!-- Lista de informes disponibles para el administrador -->
                             <ul>
-                                <li><a href="{% url 'reporte_softland' %}" >Reporte para Softland</a></li>
+                                <li><a href="{% url 'reporte_softland' %}" >Reporte general</a></li>
                                 <li><a href="{% url 'reporte_mensual' %}" >Reporte mensual</a></li>
                                 <li><a href="{% url 'reporte_semanal' %}" >Reporte semanal</a></li>
                             </ul>
                         </div>
                     </div>
-                {% endif %}
             </div>
         </div>
     </div>
