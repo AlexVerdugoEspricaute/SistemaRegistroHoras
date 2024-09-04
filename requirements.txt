@@ -21,8 +21,9 @@ packaging==24.1
 pandas==2.2.1
 pillow==10.2.0
 platformdirs==4.2.0
-psycopg2-binary==2.9.9
+psycopg2==2.9.9
 pycparser==2.22
+PyMySQL==1.1.0
 python-dateutil==2.9.0.post0
 python-slugify==8.0.4
 pytz==2024.1
