@@ -15,15 +15,13 @@ env==0.1.0
 et-xmlfile==1.1.0
 filelock==3.13.1
 gunicorn==22.0.0
-
 numpy==1.26.4
 openpyxl==3.1.2
-
 packaging==24.1
 pandas==2.2.1
 pillow==10.2.0
 platformdirs==4.2.0
-psycopg2==2.9.9
+psycopg2-binary
 pycparser==2.22
 PyMySQL==1.1.0
 python-dateutil==2.9.0.post0
