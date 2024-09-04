@@ -6,14 +6,13 @@ from django.contrib.auth import authenticate, login
 from .forms import  *
 from .models import RegistroHH, PersonalEmpresa
 import pandas as pd
-from django.utils import timezone
 from django.db.models import Sum, Q, F
 import datetime
-from datetime import timedelta
 
 
 
-@login_required
+
+
 def register_user(request):
     if request.method == 'POST':
         form = AkzUsuerRegistrationForm(request.POST)
@@ -57,16 +56,20 @@ def user_login(request):
 
 
 
-@login_required
+
 def panel(request):
-    if request.user.usuario_administrador:
-        # Si el usuario es un administrador, filtrar los registros por su jefatura
-        jefatura_usuario = request.user
-        registros_semana_actual = RegistroHH.objects.filter(persona__jefatura=jefatura_usuario)
+    if request.user.is_authenticated:
+        if request.user.usuario_administrador:
+            # Si el usuario es un administrador, filtrar los registros por su jefatura
+            jefatura_usuario = request.user
+            registros_semana_actual = RegistroHH.objects.filter(persona__jefatura=jefatura_usuario)
+        else:
+            # Si el usuario no es administrador, filtrar los registros por su ingreso_hora
+            ingreso_hora_usuario = request.user
+            registros_semana_actual = RegistroHH.objects.filter(persona__ingreso_hora=ingreso_hora_usuario)
     else:
-        # Si el usuario no es administrador, filtrar los registros por su ingreso_hora
-        ingreso_hora_usuario = request.user
-        registros_semana_actual = RegistroHH.objects.filter(persona__ingreso_hora=ingreso_hora_usuario)
+        # Manejo de usuarios no autenticados, por ejemplo, devolviendo un mensaje de error o mostrando registros públicos
+        registros_semana_actual = RegistroHH.objects.none()  # No mostrar registros para usuarios anónimos
 
     # Resumen de todas las horas trabajadas esta semana
     horas_trabajadas_semana_actual = registros_semana_actual.aggregate(
@@ -108,24 +111,31 @@ def panel(request):
 
 
 
-@login_required
+
 def visualizar(request):
     if request.method == 'POST':
+        # Procesar la solicitud POST para cambiar el estado de un registro
         registro_id = request.POST.get('registro_id')
         registro = get_object_or_404(RegistroHH, id=registro_id)
         registro.seleccionar = not registro.seleccionar  # Invierte el estado del checkbox
         registro.save()
         return redirect('visualizar')
     else:
+        # Si la solicitud no es POST, crear un formulario vacío
         form = RegistroHorasForm()
 
-    if request.user.usuario_administrador:
-        # Filtrar los registros por la jefatura del usuario administrador
-        jefatura_usuario = request.user
-        registros = RegistroHH.objects.filter(persona__jefatura=jefatura_usuario)
+    if request.user.is_authenticated:
+        # Si el usuario está autenticado, proceder con la lógica original
+        if request.user.usuario_administrador:
+            # Filtrar los registros por la jefatura del usuario administrador
+            jefatura_usuario = request.user
+            registros = RegistroHH.objects.filter(persona__jefatura=jefatura_usuario)
+        else:
+            # Filtrar los registros por el campo ingreso_hora del usuario actual
+            registros = RegistroHH.objects.filter(persona__ingreso_hora=request.user)
     else:
-        # Filtrar los registros por el campo ingreso_hora del usuario actual
-        registros = RegistroHH.objects.filter(persona__ingreso_hora=request.user)
+        # Manejo de usuarios no autenticados
+        registros = RegistroHH.objects.none()  # No mostrar registros si el usuario no está autenticado
 
     return render(request, 'account/visualizar.html', {'form': form, 'registros': registros})
 
@@ -137,77 +147,96 @@ def password_change(request):
 
 
 
-@login_required
 def registrar(request):
-    # Obtener la jefatura del usuario logeado
-    jefatura_usuario = request.user
+    if request.user.is_authenticated:
+        jefatura_usuario = request.user
 
-    if request.user.usuario_administrador:
-        # Si el usuario es un administrador, permitir registrar para todas las personas bajo su jefatura
-        personas = PersonalEmpresa.objects.filter(jefatura=jefatura_usuario)
-    else:
-        # Filtrar las personas por ingreso_hora del usuario actual
-        personas = PersonalEmpresa.objects.filter(ingreso_hora=request.user)
+        if request.user.usuario_administrador:
+            # Si el usuario es un administrador, permitir registrar para todas las personas bajo su jefatura
+            personas = PersonalEmpresa.objects.filter(jefatura=jefatura_usuario)
+        else:
+            # Filtrar las personas por ingreso_hora del usuario actual
+            personas = PersonalEmpresa.objects.filter(ingreso_hora=request.user)
         
-    # Filtrar los proyectos asignados al usuario actual
-    proyectos_asignados = Proyecto.objects.filter(asignado_a=request.user)
-    
-    # Filtrar los hitos según los proyectos asignados al usuario actual
-    hitos = Hito.objects.filter(proyecto__in=proyectos_asignados)
+        # Filtrar los proyectos asignados al usuario actual
+        proyectos_asignados = Proyecto.objects.filter(asignado_a=request.user)
+        
+        # Filtrar los hitos según los proyectos asignados al usuario actual
+        hitos = Hito.objects.filter(proyecto__in=proyectos_asignados)
+    else:
+        # Manejo de usuarios no autenticados
+        jefatura_usuario = None
+        personas = PersonalEmpresa.objects.none()
+        proyectos_asignados = Proyecto.objects.none()
+        hitos = Hito.objects.none()
 
     if request.method == 'POST':
-        form = RegistroHorasForm(request.POST, user=request.user, jefatura=jefatura_usuario)
-        if form.is_valid():
-            form.save()
-            return redirect('visualizar')  
-    else:
-        if request.user.usuario_administrador:
-            form = RegistroHorasForm(user=request.user, jefatura=jefatura_usuario)
+        if request.user.is_authenticated:
+            form = RegistroHorasForm(request.POST, user=request.user, jefatura=jefatura_usuario)
+            if form.is_valid():
+                form.save()
+                return redirect('visualizar')
         else:
-            form = RegistroHorasForm(user=request.user)
+            # No permitir registrar si no está autenticado
+            form = RegistroHorasForm()
+    else:
+        if request.user.is_authenticated:
+            if request.user.usuario_administrador:
+                form = RegistroHorasForm(user=request.user, jefatura=jefatura_usuario)
+            else:
+                form = RegistroHorasForm(user=request.user)
+        else:
+            form = RegistroHorasForm()
 
     return render(request, 'account/registrar.html', {'form': form, 'personas': personas, 'hitos': hitos})
 
 
 
-@login_required
 def registrar_especial(request):
-    jefatura_usuario = request.user
+    if request.user.is_authenticated:
+        jefatura_usuario = request.user
 
-    if request.user.usuario_administrador:
-        # Si el usuario es un administrador, permitir registrar para todas las personas bajo su jefatura
-        personas = PersonalEmpresa.objects.filter(jefatura=jefatura_usuario)
-    else:
-        # Filtrar las personas por ingreso_hora del usuario actual
-        personas = PersonalEmpresa.objects.filter(ingreso_hora=request.user)
-        
-    
-    if request.method == 'POST':
-        # Si la solicitud es POST, procesar los datos del formulario
-        form = RegistroHorasEspecialesForm(request.POST)
-        
-        # Validar el formulario
-        if form.is_valid():
-            # Guardar los datos del formulario en la base de datos
-            registro = form.save(commit=False)
-            registro.save()
-            
-            # Mostrar un mensaje de éxito y redirigir a la página de visualización
-            messages.success(request, "Registros exitosos: Las horas se han registrado correctamente.")
-            return redirect('visualizar')  
+        if request.user.usuario_administrador:
+            # Si el usuario es un administrador, permitir registrar para todas las personas bajo su jefatura
+            personas = PersonalEmpresa.objects.filter(jefatura=jefatura_usuario)
         else:
-            # Si el formulario no es válido, mostrar un mensaje de error
-            messages.error(request, "Error en el formulario: Por favor, corrija los errores.")
-            return render(request, 'account/registrar_especial.html', {'form': form, 'personas': personas})
+            # Filtrar las personas por ingreso_hora del usuario actual
+            personas = PersonalEmpresa.objects.filter(ingreso_hora=request.user)
+    else:
+        # Manejo de usuarios no autenticados
+        jefatura_usuario = None
+        personas = PersonalEmpresa.objects.none()
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            # Si la solicitud es POST y el usuario está autenticado, procesar los datos del formulario
+            form = RegistroHorasEspecialesForm(request.POST)
+
+            # Validar el formulario
+            if form.is_valid():
+                # Guardar los datos del formulario en la base de datos
+                registro = form.save(commit=False)
+                registro.save()
+
+                # Mostrar un mensaje de éxito y redirigir a la página de visualización
+                messages.success(request, "Registros exitosos: Las horas se han registrado correctamente.")
+                return redirect('visualizar')
+            else:
+                # Si el formulario no es válido, mostrar un mensaje de error
+                messages.error(request, "Error en el formulario: Por favor, corrija los errores.")
+                return render(request, 'account/registrar_especial.html', {'form': form, 'personas': personas})
+        else:
+            # Si la solicitud es POST pero el usuario no está autenticado, redirigir al inicio de sesión
+            return redirect('login')
     else:
         # Si la solicitud no es POST, mostrar el formulario vacío
         form = RegistroHorasEspecialesForm()
-        
+
     # Pasar el queryset de personas al formulario para aplicar el filtro
     form.fields['persona'].queryset = personas
-        
-    
+
     return render(request, 'account/registrar_especial.html', {'form': form, 'personas': personas})
+
 
 
 #documento del mes para softland

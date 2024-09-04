@@ -16,7 +16,7 @@
     <!-- Barra de navegación -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
         <!-- Logo -->
-        <a href="/"><img src="{% static 'images/logoAkzio.png' %}" alt="home"/></a>
+        <a href="/"><img src="{% static 'images/logo.png' %}" alt="home"/></a>
         <!-- Botón de menú colapsable -->    
         <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,30 +26,31 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <!-- Opciones de navegación -->
-                {% if request.user.is_authenticated %}
                 <a class="nav-link" href="{% url 'registrar' %}">Registrar Horas</a>
-                <a class="nav-link" href="{% url 'registrar_especial' %}">Registrar Horas Extraordinas </a>
+                <a class="nav-link" href="{% url 'registrar_especial' %}">Registrar Horas Extraordinas</a>
                 <a class="nav-link" href="{% url 'visualizar' %}">Visualizar</a>
                 <a><h2>{{ fecha_hora_chile }}</h2></a> 
-                {% endif %}
                 <!-- Panel de administración para usuarios administradores -->
-                {% if request.user.usuario_administrador %}
                 <a class="nav-link" href="{% url 'admin:index' %}">Panel de Administración</a>
-                <a class="nav-link" href="{% url 'register' %}">registrate</a>
-            {% endif %}
-
+                <a class="nav-link" href="{% url 'register' %}">Registrarse</a>
             </div>
         </div>
         <!-- Botones de autenticación -->
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav" id="navbarButtons">
+                {% if not request.user.is_authenticated %}
+                <!-- Mostrar el botón de inicio de sesión si el usuario no está autenticado -->
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="btn">Iniciar Sesión</a>
+                </li>
+                {% endif %}
                 {% if request.user.is_authenticated %}
                 <!-- Mensaje de bienvenida y botón de cierre de sesión -->
                 <h4 class="bienvenido"> Bienvenido {{ request.user.first_name | default:request.user.nombre }} !</h4>
                 <li class="nav-item">
                     <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn">Cerrar</button>
+                        <button type="submit" class="btn">Cerrar Sesión</button>
                     </form>
                 </li>
                 {% endif %}
