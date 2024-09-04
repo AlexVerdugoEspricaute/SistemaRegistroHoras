@@ -5,9 +5,8 @@
         "config":{"maxLambdaSize": "15mb", "runtime": "python3.11.5"}
     }],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "sistemaRegistro/wsgi.py"
-        }
+        { "src": "/static/(.*)", "dest": "/static/$1" },
+        { "src": "/media/(.*)", "dest": "/media/$1" },
+        { "src": "/(.*)", "dest": "sistemaRegistro/wsgi.py"}
     ]
 }
